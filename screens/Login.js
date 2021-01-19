@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import * as firebase from "firebase";
 
 import {
   StyleSheet,
@@ -16,9 +17,18 @@ import {
 // };
 
 export default function Login({ navigation }) {
-  const [email, password] = useState(0);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  loginUser = (email, password) => {};
+  loginUser = (email, password) => {
+    //validate Password
+
+    try {
+      console.log(firebase.auth().signInWithEmailAndPassword(email, password));
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -33,17 +43,19 @@ export default function Login({ navigation }) {
       >
         <TextInput
           placeholder="Your Email"
-          onChangeText={(email) => this.setState({ email })}
+          onChangeText={(text) => setEmail(text)}
         />
         <TextInput
           placeholder="Your Password"
-          onChangeText={(password) => this.setState({ password })}
+          onChangeText={(text) => setPassword(text)}
+
+          //   onChangeText={(event) => setPassword(event.target.value)}
         />
       </View>
       <Button
         title="Login"
-        onPress={() => this.loginUser(this.state.email, this.state.password)}
-        onPress={() => navigation.push("Main")}
+        onPress={() => loginUser(email, password)}
+        // onPress={() => navigation.push("Main")}
       />
       <Button title="Signup" onPress={() => navigation.push("Signup")} />
     </View>
