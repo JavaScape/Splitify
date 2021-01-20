@@ -45,8 +45,15 @@ export default function Signup({ navigation }) {
     const val = validation();
 
     if (val) {
-      firebase.auth().createUserWithEmailAndPassword(email, password);
-      navigation.push("Main");
+      firebase
+        .auth()
+        .createUserWithEmailAndPassword(email, password)
+        .then((result) => {
+          navigation.push("Main");
+        })
+        .catch((err) => {
+          setpasswordErr("There already exists an account with that email.");
+        });
     } else {
       // Need to print error messages here
     }
@@ -82,6 +89,7 @@ export default function Signup({ navigation }) {
         <TextInput
           placeholder="Your Password"
           onChangeText={(text) => setPassword(text)}
+          secureTextEntry={true}
         />
         {passwordErr.length > 0 && (
           <Text style={{ color: "red" }}>{passwordErr}</Text>

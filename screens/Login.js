@@ -27,6 +27,9 @@ export default function Login({ navigation }) {
     firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
+      .then((result) => {
+        navigation.push("Main");
+      })
       .catch((err) => {
         setValidate("Incorrect credentials entered.");
       });
@@ -50,6 +53,7 @@ export default function Login({ navigation }) {
         <TextInput
           placeholder="Your Password"
           onChangeText={(text) => setPassword(text)}
+          secureTextEntry={true}
 
           //   onChangeText={(event) => setPassword(event.target.value)}
         />
