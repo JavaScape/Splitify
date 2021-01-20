@@ -18,16 +18,18 @@ import {
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
+  const [validate, setValidate] = useState("");
   const [password, setPassword] = useState("");
 
-  loginUser = (email, password) => {
-    //validate Password
+  loginUser = () => {
+    //validate email
 
-    try {
-      console.log(firebase.auth().signInWithEmailAndPassword(email, password));
-    } catch (err) {
-      console.log(err);
-    }
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(email, password)
+      .catch((err) => {
+        setValidate("Incorrect credentials entered.");
+      });
   };
 
   return (
@@ -51,6 +53,10 @@ export default function Login({ navigation }) {
 
           //   onChangeText={(event) => setPassword(event.target.value)}
         />
+
+        {validate.length > 0 && (
+          <Text style={{ color: "red" }}>{validate}</Text>
+        )}
       </View>
       <Button
         title="Login"
