@@ -51,8 +51,14 @@ export default function Signup({ navigation }) {
         .then((result) => {
           navigation.push("Main");
         })
-        .catch((err) => {
-          setpasswordErr("There already exists an account with that email.");
+        .catch((error) => {
+          if (error.code === "auth/email-already-in-use") {
+            setpasswordErr("There already exists an account with that email.");
+          } else if (error.code === "auth/invalid-email") {
+            console.log("That email address is invalid!");
+          } else {
+            console.log(error);
+          }
         });
     } else {
       // Need to print error messages here
