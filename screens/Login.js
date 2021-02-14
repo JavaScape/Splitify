@@ -3,8 +3,8 @@ import { UserContext } from "../components/userContext";
 import * as firebase from "firebase";
 import { Dimensions } from "react-native";
 
-var width = Dimensions.get('window').width - 150; //full width
-var height = Dimensions.get('window').height; //full height
+var width = Dimensions.get("window").width - 150; //full width
+var height = Dimensions.get("window").height; //full height
 
 import {
   StyleSheet,
@@ -15,7 +15,6 @@ import {
   Button,
   Alert,
   TouchableOpacity,
-
 } from "react-native";
 
 // this.state = {
@@ -43,7 +42,6 @@ export default function Login({ navigation }) {
           .doc(result.user.uid)
           .get()
           .then((user) => {
-            console.log("OVER HERE!!!: " + user);
             setUser(user);
           });
         navigation.push("Main");
@@ -76,23 +74,25 @@ export default function Login({ navigation }) {
           onChangeText={(text) => setPassword(text)}
           secureTextEntry={true}
 
-        //   onChangeText={(event) => setPassword(event.target.value)}
+          //   onChangeText={(event) => setPassword(event.target.value)}
         />
         {validate.length > 0 && (
           <Text style={{ color: "#cc3300" }}>{validate}</Text>
         )}
-        {validate.length <= 0 && (
-          <Text style={{ color: "#F5F5F5" }}>.</Text>
-        )}
-        <TouchableOpacity onPress={() => loginUser(email, password)} style={styles.appButtonContainer}>
+        {validate.length <= 0 && <Text style={{ color: "#F5F5F5" }}>.</Text>}
+        <TouchableOpacity
+          onPress={() => loginUser(email, password)}
+          style={styles.appButtonContainer}
+        >
           <Text style={styles.appButtonText}>Login</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.push("Signup")} style={styles.appButtonContainer}>
+        <TouchableOpacity
+          onPress={() => navigation.push("Signup")}
+          style={styles.appButtonContainer}
+        >
           <Text style={styles.appButtonText}>Signup</Text>
         </TouchableOpacity>
-
       </View>
-
     </View>
   );
 }
@@ -116,17 +116,15 @@ const styles = StyleSheet.create({
     height: 350,
   },
   input: {
-    backgroundColor: '#f2f2f2',
-    borderColor: '#a6a6a6',
+    backgroundColor: "#f2f2f2",
+    borderColor: "#a6a6a6",
     borderRadius: 10,
     borderWidth: 1,
     padding: 2,
     paddingLeft: 8,
 
-    alignSelf: 'center',
+    alignSelf: "center",
     width: width,
-
-
   },
   appButtonContainer: {
     elevation: 8,
@@ -134,7 +132,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingVertical: 8,
     paddingHorizontal: 8,
-
   },
   appButtonText: {
     fontSize: 15,
@@ -143,6 +140,6 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     textTransform: "uppercase",
     width: 100,
-    textAlign: 'center', // <-- the magic
+    textAlign: "center", // <-- the magic
   },
 });

@@ -19,6 +19,7 @@ if (!firebase.apps.length) {
 } else {
   firebase.app();
 }
+
 export default function App() {
   const [user, setUser] = useState(null);
   return (

@@ -91,7 +91,6 @@ export default function Signup({ navigation }) {
                 .doc(result.user.uid)
                 .get()
                 .then((user) => {
-                  console.log("OVER HERE!!!: " + user);
                   setUser(user);
                 });
 
