@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { UserContext } from "../components/userContext";
 import {
   StyleSheet,
   View,
@@ -9,12 +10,14 @@ import {
   Alert,
   TouchableOpacity,
 } from "react-native";
+
 import * as firebase from "firebase";
+import "firebase/firestore";
 
 import { Dimensions } from "react-native";
 
-var width = Dimensions.get('window').width - 150; //full width
-var height = Dimensions.get('window').height; //full height
+var width = Dimensions.get("window").width - 150; //full width
+var height = Dimensions.get("window").height; //full height
 
 export default function Signup({ navigation }) {
   const [name, setName] = useState("");
@@ -23,6 +26,8 @@ export default function Signup({ navigation }) {
   const [emailErr, setemailErr] = useState("");
   const [password, setPassword] = useState("");
   const [passwordErr, setpasswordErr] = useState("");
+
+  const { user, setUser } = useContext(UserContext);
 
   const validation = () => {
     let isValid = true;
@@ -55,7 +60,43 @@ export default function Signup({ navigation }) {
         .auth()
         .createUserWithEmailAndPassword(email, password)
         .then((result) => {
-          navigation.push("Main");
+          //
+
+          // Add the user info to the firestore
+          // firestore()
+          //   .collection("users")
+          //   .add({
+          //     name: name,
+          //     email: email,
+          //     balance,
+          //   })
+          //   .then(() => console.log("User Added!"));
+
+          //
+          firebase
+            .firestore()
+            .collection("users")
+            .doc(result.user.uid)
+            .set({
+              name: name,
+              email: email,
+              balance: 0,
+            })
+            .then((res) => {
+              console.log("DIFF MSSG");
+
+              firebase
+                .firestore()
+                .collection("users")
+                .doc(result.user.uid)
+                .get()
+                .then((user) => {
+                  console.log("OVER HERE!!!: " + user);
+                  setUser(user);
+                });
+
+              navigation.push("Main");
+            });
         })
         .catch((error) => {
           if (error.code === "auth/email-already-in-use") {
@@ -88,8 +129,14 @@ export default function Signup({ navigation }) {
           styles.textInputAndButton,
         ]}
       >
-        <TextInput placeholder="Username" style={styles.input} onChangeText={(text) => setName(text)} />
-        {nameErr.length > 0 && <Text style={{ color: "#cc3300" }}>{nameErr}</Text>}
+        <TextInput
+          placeholder="Username"
+          style={styles.input}
+          onChangeText={(text) => setName(text)}
+        />
+        {nameErr.length > 0 && (
+          <Text style={{ color: "#cc3300" }}>{nameErr}</Text>
+        )}
         {nameErr.length <= 0 && <Text style={{ color: "#F5F5F5" }}>.</Text>}
 
         <TextInput
@@ -111,18 +158,20 @@ export default function Signup({ navigation }) {
         {passwordErr.length > 0 && (
           <Text style={{ color: "#cc3300" }}>{passwordErr}</Text>
         )}
-        {passwordErr.length <= 0 && (
-          <Text style={{ color: "#F5F5F5" }}>.</Text>
-        )}
-        <TouchableOpacity onPress={() => signupUser()} style={styles.appButtonContainer}>
+        {passwordErr.length <= 0 && <Text style={{ color: "#F5F5F5" }}>.</Text>}
+        <TouchableOpacity
+          onPress={() => signupUser()}
+          style={styles.appButtonContainer}
+        >
           <Text style={styles.appButtonText}>Signup</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => navigation.push("Login")} style={styles.appButtonContainer}>
+        <TouchableOpacity
+          onPress={() => navigation.push("Login")}
+          style={styles.appButtonContainer}
+        >
           <Text style={styles.appButtonText}>Login</Text>
         </TouchableOpacity>
-
-
       </View>
     </View>
   );
@@ -147,17 +196,15 @@ const styles = StyleSheet.create({
     height: 350,
   },
   input: {
-    backgroundColor: '#f2f2f2',
-    borderColor: '#a6a6a6',
+    backgroundColor: "#f2f2f2",
+    borderColor: "#a6a6a6",
     borderRadius: 10,
     borderWidth: 1,
     padding: 2,
     paddingLeft: 8,
 
-    alignSelf: 'center',
+    alignSelf: "center",
     width: width,
-
-
   },
   appButtonContainer: {
     elevation: 8,
@@ -166,7 +213,6 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 8,
     margin: 6,
-
   },
   appButtonText: {
     fontSize: 15,
@@ -175,6 +221,6 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     textTransform: "uppercase",
     width: 100,
-    textAlign: 'center', // <-- the magic
+    textAlign: "center", // <-- the magic
   },
 });

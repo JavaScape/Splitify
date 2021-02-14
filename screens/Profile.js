@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   StyleSheet,
   View,
@@ -9,13 +9,17 @@ import {
   Alert,
 } from "react-native";
 import * as firebase from "firebase";
+import { UserContext } from "../components/userContext";
 
 export default function Profile({ navigation }) {
+  const { user, setUser } = useContext(UserContext);
+
   function logoutUser() {
     firebase
       .auth()
       .signOut()
       .then(() => {
+        setUser(firebase.auth().currentUser);
         navigation.push("Login");
       })
       .catch((err) => {
@@ -23,7 +27,6 @@ export default function Profile({ navigation }) {
       });
   }
 
-  var user = firebase.auth().currentUser;
   if (user == null) {
     navigation.push("Login");
   }
@@ -32,8 +35,8 @@ export default function Profile({ navigation }) {
     <View style={styles.container}>
       <Text>Profile</Text>
       <Button title="logout" onPress={() => logoutUser()} />
-      <Text>{user.email}</Text>
-      <Text>{user.displayName}</Text>
+      {user != null && <Text>{user.data().email}</Text>}
+      <Text>{user != null && user.data().name}</Text>
     </View>
   );
 }

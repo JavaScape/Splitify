@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { UserContext } from "../components/userContext";
 import * as firebase from "firebase";
 import { Dimensions } from "react-native";
 
@@ -27,13 +28,24 @@ export default function Login({ navigation }) {
   const [validate, setValidate] = useState("");
   const [password, setPassword] = useState("");
 
-  loginUser = () => {
+  const { user, setUser } = useContext(UserContext);
+
+  const loginUser = () => {
     //validate email
 
     firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
       .then((result) => {
+        firebase
+          .firestore()
+          .collection("users")
+          .doc(result.user.uid)
+          .get()
+          .then((user) => {
+            console.log("OVER HERE!!!: " + user);
+            setUser(user);
+          });
         navigation.push("Main");
       })
       .catch((err) => {
