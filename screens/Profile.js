@@ -8,6 +8,7 @@ import {
   TextInput,
   Button,
   Alert,
+  TouchableOpacity,
 } from "react-native";
 import * as firebase from "firebase";
 import { UserContext } from "../components/userContext";
@@ -24,7 +25,7 @@ export default function Profile({ navigation }) {
         setUser(firebase.auth().currentUser);
         navigation.reset({
           index: 0,
-          routes: [{ name: 'Login' }],
+          routes: [{ name: "Login" }],
         });
       })
       .catch((err) => {
@@ -34,30 +35,24 @@ export default function Profile({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text>Profile</Text>
-      {/* <Avatar
-        size="xlarge"
-        overlayContainerStyle={{ backgroundColor: "blue" }}
-        icon={{ name: "meetup", color: "red", type: "font-awesome" }}
-        onPress={() => console.log("Works!")}
-        activeOpacity={0.7}
-      /> */}
-
       <Avatar
-        // style={styles.profilepicture}
         size={200}
         rounded
         overlayContainerStyle={{ backgroundColor: "grey" }}
         icon={{ name: "user", color: "rgb(192,192,192)", type: "font-awesome" }}
         onPress={() => console.log("Works!")}
         activeOpacity={0.7}
-        // containerStyle={{ flex: 2, marginLeft: 20, marginTop: 115 }}
       />
 
       {user != null && <Text style={styles.text}>{user.data().email}</Text>}
       <Text style={styles.text}>{user != null && user.data().name}</Text>
 
-      <Button title="logout" onPress={() => logoutUser()} />
+      <TouchableOpacity
+        onPress={() => logoutUser()}
+        style={styles.appButtonContainer}
+      >
+        <Text style={styles.appButtonText}>logout</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -74,6 +69,22 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 30,
+  },
+  appButtonContainer: {
+    elevation: 8,
+    backgroundColor: "#ff8080",
+    borderRadius: 10,
+    paddingVertical: 8,
+    paddingHorizontal: 8,
+  },
+  appButtonText: {
+    fontSize: 15,
+    color: "#fff",
+    fontWeight: "bold",
+    alignSelf: "center",
+    textTransform: "uppercase",
+    width: 100,
+    textAlign: "center", // <-- the magic
   },
   // profilepicture: {
 
