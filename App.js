@@ -21,7 +21,6 @@ if (!firebase.apps.length) {
 }
 export default function App() {
   const [user, setUser] = useState(null);
-
   return (
     <UserContext.Provider value={{ user, setUser }}>
       <Navigation />

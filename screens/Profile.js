@@ -15,20 +15,20 @@ export default function Profile({ navigation }) {
   const { user, setUser } = useContext(UserContext);
 
   function logoutUser() {
+    // You need asyn
     firebase
       .auth()
       .signOut()
       .then(() => {
         setUser(firebase.auth().currentUser);
-        navigation.push("Login");
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'Login' }],
+        });
       })
       .catch((err) => {
         console.log(err);
       });
-  }
-
-  if (user == null) {
-    navigation.push("Login");
   }
 
   return (

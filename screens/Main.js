@@ -10,6 +10,8 @@ import Profile from './Profile';
 import Group from './Group';
 import Finance from './Finance';
 
+import GroupStack from '../routes/GroupStack';
+
 const Tab = createMaterialBottomTabNavigator();
 
 const MainTabScreen = () => (
@@ -21,7 +23,7 @@ const MainTabScreen = () => (
     >
         <Tab.Screen
             name="Group"
-            component={Group}
+            component={GroupStack}
             options={{
                 tabBarLabel: 'Group',
                 tabBarColor: '#009387',
