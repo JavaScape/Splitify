@@ -11,7 +11,10 @@ import {
 import { Formik } from "formik";
 import { Dimensions } from "react-native";
 import { useEffect } from "react";
+import { Avatar } from "react-native-elements";
 import * as yup from "yup";
+import * as ImagePicker from "expo-image-picker";
+import * as database from "./../components/firebaseCommands";
 import {
   nameExist,
   addGroup,
@@ -29,9 +32,23 @@ var width = Dimensions.get("window").width - 80; //full width
 var height = Dimensions.get("window").height; //full height
 
 export default function CreateGroup({ navigation }) {
+  const [profilePic, setprofilePic] = useState(null);
   const [friends, setFriends] = useState([]);
 
   const currUser = firebase.auth().currentUser;
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      allowsMultipleSelection: false,
+    });
+
+    if (!result.cancelled) {
+      // await database.uploadImage(result.uri, currUser.uid);
+      setprofilePic(result.uri);
+    }
+  };
 
   useEffect(() => {
     setFriends([]);
@@ -75,16 +92,47 @@ export default function CreateGroup({ navigation }) {
       }),
   });
 
+  const submitHandler = async (name) => {
+    const groupId = await addGroup(name, friends.concat(currUser.email));
+
+    const newPic = await database.uploadImage(profilePic, groupId);
+
+    console.log("Before: " + profilePic);
+    setprofilePic(null);
+    console.log("After: " + profilePic);
+  };
+
   return (
     <ScrollView>
       <View style={styles.container}>
+        <Avatar
+          size={200}
+          rounded
+          overlayContainerStyle={{ backgroundColor: "grey" }}
+          source={
+            profilePic && {
+              uri: profilePic,
+            }
+          }
+          icon={
+            !profilePic && {
+              name: "user",
+              color: "rgb(192,192,192)",
+              type: "font-awesome",
+            }
+          }
+          onPress={() => pickImage()}
+          activeOpacity={0.7}
+        />
+
         <Formik
           initialValues={{ name: "" }}
           validationSchema={checkGroup}
           onSubmit={(values, actions) => {
             // checkAndAddGroup(values.name, friends);
+            submitHandler(values.name);
+            // addGroup(values.name, friends.concat(currUser.email));
 
-            addGroup(values.name, friends.concat(currUser.email));
             setFriends([]);
             actions.resetForm();
           }}
@@ -184,6 +232,10 @@ const styles = StyleSheet.create({
     width: Dimensions.get("window").width,
     backgroundColor: "#ecf9f2",
     height: height,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    alignItems: "center",
   },
   input: {
     backgroundColor: "#f2f2f2",

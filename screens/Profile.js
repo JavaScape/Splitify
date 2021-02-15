@@ -39,17 +39,8 @@ export default function Profile({ navigation }) {
     });
 
     if (!result.cancelled) {
-      var imageToStore = null;
       await database.uploadImage(result.uri, currUser.uid);
       setprofilePic(result.uri);
-      // await database
-      //   .getImage(firebase.auth().currentUser.uid)
-      //   .then((result) => {
-      //     imageToStore = result;
-      //   });
-      // if (imageToStore) {
-      //   setprofilePic(imageToStore);
-      // }
     }
   };
 
@@ -108,7 +99,6 @@ export default function Profile({ navigation }) {
           <Text style={styles.appButtonText}>logout</Text>
         </TouchableOpacity>
       </View>
-
     </View>
   );
 }
@@ -133,7 +123,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 8,
     marginLeft: 10,
-    marginRight: 10
+    marginRight: 10,
   },
   appButtonText: {
     fontSize: 15,
@@ -144,7 +134,7 @@ const styles = StyleSheet.create({
     width: 100,
     textAlign: "center",
     paddingLeft: 10,
-    paddingRight: 10 // <-- the magic
+    paddingRight: 10, // <-- the magic
   },
   sidebyside: {
     flexDirection: "row",

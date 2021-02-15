@@ -181,24 +181,25 @@ const addFriendToGroup = async (name, email) => {
 };
 
 const addGroup = async (name, friends) => {
-  await database
-    .collection("groups")
-    .add({
+  var newDocument = await database.collection("groups").doc();
+
+  await newDocument
+    .set({
       name: name,
       friends: friends,
       transaction: [],
+      groupId: newDocument.id,
     })
     .then((res) => {
       friends.forEach((friend) => {
         addFriendToGroup(name, friend);
-        console.log("Friend added!: " + friend);
       });
-      console.log("Document Added");
-      // return res;
     })
     .catch((err) => {
       console.log(err);
     });
+
+  return newDocument.id;
 };
 
 export {
