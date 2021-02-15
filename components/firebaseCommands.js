@@ -79,8 +79,36 @@ const nameExist = async (val, against, col) => {
 
 };
 
-const addGroup = (name, friends) => {
-  database.collection('group').add({
+const groupExist = async (val) => {
+  var toReturn = true;
+  if (val == null) {
+    return false;
+  }
+  try {
+    await database
+      .collection("groups")
+      .where("name", "==", val)
+      .get()
+      .then((res) => {
+        //{res.docs ? true : false};
+
+        if (res.docs.length) {
+          toReturn = false;
+        } else {
+          toReturn = true;
+        }
+      });
+    return toReturn;
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+
+};
+
+
+const addGroup = async (name, friends) => {
+  await database.collection('groups').add({
     name: name,
     friends: friends,
     transaction: {},
@@ -92,4 +120,4 @@ const addGroup = (name, friends) => {
   })
 }
 
-export { uploadImage, getImage, nameExist, addGroup };
+export { uploadImage, getImage, nameExist, groupExist, addGroup };

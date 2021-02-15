@@ -12,7 +12,8 @@ import { Formik } from "formik";
 import { Dimensions } from "react-native";
 import { useEffect } from "react";
 import * as yup from "yup";
-import { nameExist, addGroup } from "../components/firebaseCommands";
+import { nameExist, addGroup, groupExist } from "../components/firebaseCommands";
+import { not } from "react-native-reanimated";
 
 var width = Dimensions.get("window").width - 80; //full width
 var height = Dimensions.get("window").height; //full height
@@ -31,7 +32,7 @@ export default function CreateGroup({ navigation }) {
       .min(3)
       .test("Check if friend exist", "Friend Does Not Exist", (val) => {
         // console.log(nameExist(val));
-        return nameExist(val, "email", "users");
+        return nameExist(val, "email", "users") && !friends.includes(val);
       }),
   });
 
@@ -41,7 +42,10 @@ export default function CreateGroup({ navigation }) {
       .required()
       .test("Atleast 1 friend", "Group Requires Atleast One Friend", (val) => {
         return friends.length > 0;
-      }).test("does the group exist?", "Group Name Exist", (val => { return true }))
+      }).test("does the group exist?", "Group Name Exist", (val) => {
+
+        return groupExist(val);
+      }),
   });
 
   return (
