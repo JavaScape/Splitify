@@ -12,7 +12,7 @@ import { Formik } from "formik";
 import { Dimensions } from "react-native";
 import { useEffect } from "react";
 import * as yup from "yup";
-import { nameExist } from "../components/firebaseCommands";
+import { nameExist, addGroup } from "../components/firebaseCommands";
 
 var width = Dimensions.get("window").width - 80; //full width
 var height = Dimensions.get("window").height; //full height
@@ -28,16 +28,10 @@ export default function CreateGroup({ navigation }) {
     friendName: yup
       .string()
       .required()
+      .min(3)
       .test("Check if friend exist", "Friend Does Not Exist", (val) => {
         // console.log(nameExist(val));
-        nameExist(val)
-          .then((res) => {
-            console.log("result: " + res);
-            return res;
-          })
-          .catch((e) => {
-            console.log(e);
-          });
+        return nameExist(val, "email", "users");
       }),
   });
 
@@ -47,7 +41,7 @@ export default function CreateGroup({ navigation }) {
       .required()
       .test("Atleast 1 friend", "Group Requires Atleast One Friend", (val) => {
         return friends.length > 0;
-      }),
+      }).test("does the group exist?", "Group Name Exist", (val => { return true }))
   });
 
   return (
@@ -57,10 +51,7 @@ export default function CreateGroup({ navigation }) {
           initialValues={{ name: "" }}
           validationSchema={checkGroup}
           onSubmit={(values, actions) => {
-            console.log("-=-=-=-=-=-");
-            console.log(values);
-            console.log(friends);
-            console.log("-=-=-=-=-=-");
+            addGroup(values.name, friends);
             setFriends([]);
             actions.resetForm();
           }}
@@ -78,11 +69,7 @@ export default function CreateGroup({ navigation }) {
                 initialValues={{ friendName: "" }}
                 validationSchema={checkFriend}
                 onSubmit={(values, actions) => {
-                  console.log(values);
-
                   setFriends((prevArray) => [...prevArray, values.friendName]);
-
-                  console.log(friends);
                   actions.resetForm();
                 }}
               >

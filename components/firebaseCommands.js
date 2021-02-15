@@ -52,37 +52,44 @@ const getImage = async (userId) => {
   }
 };
 
-const nameExist = async (email) => {
-  var toReturn = null;
-  await database
-    .collection("users")
-    .where("email", "==", email)
-    .get()
-    .then((res) => {
-      //{res.docs ? true : false};
-      console.log("here: " + res.docs.length);
-      if (res.docs.length) {
-        toReturn = true;
-      } else {
-        toReturn = false;
-      }
-    });
-  return toReturn;
+const nameExist = async (val, against, col) => {
+  var toReturn = false;
+  if (val == null) {
+    return false;
+  }
+  try {
+    await database
+      .collection(col)
+      .where(against, "==", val)
+      .get()
+      .then((res) => {
+        //{res.docs ? true : false};
+
+        if (res.docs.length) {
+          toReturn = true;
+        } else {
+          toReturn = false;
+        }
+      });
+    return toReturn;
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+
 };
 
-// const nameExist = async (email) => {
-//   await database
-//     .collection("users")
-//     .get()
-//     .then((snapshot) => {
-//       snapshot.docs.forEach((doc) => {
-//         if (doc.data().email === email) {
-//           resolve(true);
-//         }
-//       });
-//     });
-//   console.log("dfadf");
-//   resolve(false);
-// };
+const addGroup = (name, friends) => {
+  database.collection('group').add({
+    name: name,
+    friends: friends,
+    transaction: {},
+  }).then((res) => {
+    console.log("Document Added");
+    return res;
+  }).catch((err) => {
+    console.log(err);
+  })
+}
 
-export { uploadImage, getImage, nameExist };
+export { uploadImage, getImage, nameExist, addGroup };
