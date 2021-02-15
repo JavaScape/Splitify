@@ -1,5 +1,6 @@
-import React, { useContext } from "react";
+import React, { useState, useContext } from "react";
 import { Avatar } from "react-native-elements";
+import { useEffect } from "react";
 import {
   StyleSheet,
   View,
@@ -13,8 +14,44 @@ import {
 import * as firebase from "firebase";
 import { UserContext } from "../components/userContext";
 
+import * as database from "./../components/firebaseCommands";
+
+import * as ImagePicker from "expo-image-picker";
+
 export default function Profile({ navigation }) {
   const { user, setUser } = useContext(UserContext);
+  const [profilePic, setprofilePic] = useState(null);
+
+  const currUser = firebase.auth().currentUser;
+  useEffect(() => {
+    async function getImageFromUser() {
+      const result = await database.getImage(currUser.uid);
+      setprofilePic(result);
+    }
+    getImageFromUser();
+  }, []);
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      allowsMultipleSelection: false,
+    });
+
+    if (!result.cancelled) {
+      var imageToStore = null;
+      await database.uploadImage(result.uri, currUser.uid);
+      setprofilePic(result.uri);
+      // await database
+      //   .getImage(firebase.auth().currentUser.uid)
+      //   .then((result) => {
+      //     imageToStore = result;
+      //   });
+      // if (imageToStore) {
+      //   setprofilePic(imageToStore);
+      // }
+    }
+  };
 
   function logoutUser() {
     // You need asyn
@@ -39,8 +76,19 @@ export default function Profile({ navigation }) {
         size={200}
         rounded
         overlayContainerStyle={{ backgroundColor: "grey" }}
-        icon={{ name: "user", color: "rgb(192,192,192)", type: "font-awesome" }}
-        onPress={() => console.log("Works!")}
+        source={
+          profilePic && {
+            uri: profilePic,
+          }
+        }
+        icon={
+          !profilePic && {
+            name: "user",
+            color: "rgb(192,192,192)",
+            type: "font-awesome",
+          }
+        }
+        onPress={() => pickImage()}
         activeOpacity={0.7}
       />
 

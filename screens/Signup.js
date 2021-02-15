@@ -83,8 +83,6 @@ export default function Signup({ navigation }) {
               balance: 0,
             })
             .then((res) => {
-              console.log("DIFF MSSG");
-
               firebase
                 .firestore()
                 .collection("users")
@@ -92,6 +90,7 @@ export default function Signup({ navigation }) {
                 .get()
                 .then((user) => {
                   setUser(user);
+                  console.log("HERE: " + user);
                 });
 
               navigation.push("Main");

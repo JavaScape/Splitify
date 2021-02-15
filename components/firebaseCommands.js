@@ -22,11 +22,33 @@ var storageRef = firebase.storage().ref();
 const uploadImage = async (image, userId) => {
   const response = await fetch(image);
   const blob = await response.blob();
+  await firebase
+    .storage()
+    .ref()
+    .child("images/" + userId)
+    .put(blob);
 
-  var setImage = storageRef.child("images/" + userId);
-  return setImage.put(blob).catch((e) => {
-    console.log(e);
-  });
+  // await image
+  //   .getDownloadURL()
+  //   .then((url) => {
+  //     console.log("After inserting: " + url);
+  //   })
+  //   .catch((e) => {
+  //     console.log(e);
+  //   });
 };
 
-export { uploadImage };
+const getImage = async (userId) => {
+  try {
+    const image = await storageRef.child("images/" + userId);
+    var toReturn = null;
+    await image.getDownloadURL().then((url) => {
+      toReturn = url;
+    });
+    return toReturn;
+  } catch (e) {
+    console.log("Error: " + e);
+  }
+};
+
+export { uploadImage, getImage };
