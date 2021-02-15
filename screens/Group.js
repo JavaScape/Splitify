@@ -1,6 +1,8 @@
 import React from 'react';
 
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Dimensions } from 'react-native';
+var width = Dimensions.get("window").width - 80; //full width
+var height = Dimensions.get("window").height; //full height
 
 export default function Group({ navigation }) {
     return (
@@ -15,7 +17,9 @@ export default function Group({ navigation }) {
 
 const styles = StyleSheet.create({
     container: {
-        padding: 24
+        padding: 24,
+        backgroundColor: "#ecf9f2",
+        height: height
     },
     appButtonContainer: {
         elevation: 8,

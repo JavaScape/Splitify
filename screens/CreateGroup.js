@@ -32,8 +32,11 @@ export default function CreateGroup({ navigation }) {
       .min(3)
       .test("Check if friend exist", "Friend Does Not Exist", (val) => {
         // console.log(nameExist(val));
-        return nameExist(val, "email", "users") && !friends.includes(val);
-      }),
+        return nameExist(val, "email", "users");
+      })
+      .test("friend not already in list", "Friend Included in Group Already", (val) => {
+        return friends.includes(val) === false;
+      })
   });
 
   const checkGroup = yup.object({
@@ -68,6 +71,7 @@ export default function CreateGroup({ navigation }) {
                 onChangeText={props.handleChange("name")}
                 value={props.values.name}
               ></TextInput>
+              <Text>{props.errors.name}</Text>
 
               <Formik
                 initialValues={{ friendName: "" }}
@@ -86,14 +90,18 @@ export default function CreateGroup({ navigation }) {
                         onChangeText={friendProps.handleChange("friendName")}
                         value={friendProps.values.friendName}
                       ></TextInput>
+
+
                       <TouchableOpacity
                         onPress={friendProps.handleSubmit}
                         style={styles.appButtonContainer}
                       >
                         <Text style={styles.appButtonText}>Add</Text>
                       </TouchableOpacity>
+
                       {/* <Button title='Add' onPress={friendProps.handleSubmit} ></Button> */}
                     </View>
+                    <Text>{friendProps.errors.friendName}</Text>
                     {friends.length == 0 && (
                       <View
                         style={[
@@ -149,6 +157,8 @@ const styles = StyleSheet.create({
   container: {
     padding: 24,
     width: Dimensions.get("window").width,
+    backgroundColor: "#ecf9f2",
+    height: height
   },
   input: {
     backgroundColor: "#f2f2f2",

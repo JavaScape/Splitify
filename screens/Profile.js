@@ -94,13 +94,21 @@ export default function Profile({ navigation }) {
 
       {user != null && <Text style={styles.text}>{user.data().email}</Text>}
       <Text style={styles.text}>{user != null && user.data().name}</Text>
+      <View style={styles.sidebyside}>
+        <TouchableOpacity
+          onPress={() => logoutUser()}
+          style={styles.appButtonContainer}
+        >
+          <Text style={styles.appButtonText}>Edit</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => logoutUser()}
+          style={styles.appButtonContainer}
+        >
+          <Text style={styles.appButtonText}>logout</Text>
+        </TouchableOpacity>
+      </View>
 
-      <TouchableOpacity
-        onPress={() => logoutUser()}
-        style={styles.appButtonContainer}
-      >
-        <Text style={styles.appButtonText}>logout</Text>
-      </TouchableOpacity>
     </View>
   );
 }
@@ -113,7 +121,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-evenly",
     padding: 24,
-    backgroundColor: "rgba(240,128,128, 0.3)",
+    backgroundColor: "#ffe6e6",
   },
   text: {
     fontSize: 30,
@@ -124,6 +132,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingVertical: 8,
     paddingHorizontal: 8,
+    marginLeft: 10,
+    marginRight: 10
   },
   appButtonText: {
     fontSize: 15,
@@ -132,9 +142,14 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     textTransform: "uppercase",
     width: 100,
-    textAlign: "center", // <-- the magic
+    textAlign: "center",
+    paddingLeft: 10,
+    paddingRight: 10 // <-- the magic
   },
-  // profilepicture: {
-
-  // }
+  sidebyside: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    alignSelf: "center",
+  },
 });

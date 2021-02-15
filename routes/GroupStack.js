@@ -13,7 +13,7 @@ const ContactsStackScreen = () => (
             name="Group"
             component={Group}
             options={{
-                headerShown: true, headerLeft: null
+                headerShown: false, headerLeft: null
             }}
         />
         <ContactsStack.Screen
