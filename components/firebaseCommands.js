@@ -76,48 +76,136 @@ const nameExist = async (val, against, col) => {
     console.log(err);
     return false;
   }
-
 };
 
-const groupExist = async (val) => {
-  var toReturn = true;
-  if (val == null) {
-    return false;
-  }
-  try {
-    await database
-      .collection("groups")
-      .where("name", "==", val)
-      .get()
-      .then((res) => {
-        //{res.docs ? true : false};
+// const groupExist = async (val, uid) => {
+//   var toReturn = true;
+//   if (val == null) {
+//     return false;
+//   }
 
-        if (res.docs.length) {
-          toReturn = false;
-        } else {
-          toReturn = true;
-        }
+//   try {
+//     await database
+//       .collection("users")
+//       .doc(uid)
+//       .get()
+//       .then((document) => {
+//         console.log("document: ");
+//         console.log(document.data().group.includes(val));
+//         if (document.data().group.includes(val)) {
+//           toReturn = true;
+//         } else {
+//           toReturn = false;
+//         }
+//       })
+//       .catch((e) => {
+//         console.log(e);
+//       });
+
+//     // .get()
+//     // .then((res) => {
+//     //   console.log("res: ");
+//     //   console.log(res.docs);
+//     //   // console.log("res.docs: " + res.docs);
+//     // });
+
+//     // forEach((res) => {
+//     //   console.log(res.docs);
+//     //   if (res.docs.group.includes(val)) {
+//     //     toReturn = false;
+//     //   }
+//     // });
+//     return toReturn;
+//   } catch (e) {
+//     console.log(e);
+//   }
+// };
+
+// const groupExist = async (val) => {
+//   var toReturn = true;
+//   if (val == null) {
+//     return false;
+//   }
+//   try {
+//     await database
+//       .collection("groups")
+//       .where("name", "==", val)
+//       .get()
+//       .then((res) => {
+//         //{res.docs ? true : false};
+
+//         if (res.docs.length) {
+//           toReturn = false;
+//         } else {
+//           toReturn = true;
+//         }
+//       });
+//     return toReturn;
+//   } catch (err) {
+//     console.log(err);
+//     return false;
+//   }
+
+// };
+
+const findUserId = async (email) => {
+  var toReturn = null;
+  await database
+    .collection("users")
+    .where("email", "==", email)
+    .get()
+    .then((result) => {
+      // console.log(result.docs);
+      result.forEach((element) => {
+        toReturn = element.id;
       });
-    return toReturn;
-  } catch (err) {
-    console.log(err);
-    return false;
-  }
+    })
+    .catch((e) => {
+      console.log(e);
+    });
 
+  return toReturn;
 };
 
+const addFriendToGroup = async (name, email) => {
+  var userId = await findUserId(email);
+  if (userId == null) {
+    return false;
+  }
+  await database
+    .collection("users")
+    .doc(userId)
+    .update({
+      group: firebase.firestore.FieldValue.arrayUnion(name),
+    });
+};
 
 const addGroup = async (name, friends) => {
-  await database.collection('groups').add({
-    name: name,
-    friends: friends,
-    transaction: {},
-  }).then((res) => {
-    console.log("Document Added");
-    return res;
-  }).catch((err) => {
-    console.log(err);
-  })
-}
+  await database
+    .collection("groups")
+    .add({
+      name: name,
+      friends: friends,
+      transaction: [],
+    })
+    .then((res) => {
+      friends.forEach((friend) => {
+        addFriendToGroup(name, friend);
+        console.log("Friend added!: " + friend);
+      });
+      console.log("Document Added");
+      // return res;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
 
-export { uploadImage, getImage, nameExist, groupExist, addGroup };
+export {
+  uploadImage,
+  getImage,
+  nameExist,
+  addFriendToGroup,
+  addGroup,
+  findUserId,
+};

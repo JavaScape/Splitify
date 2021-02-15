@@ -80,6 +80,7 @@ export default function Signup({ navigation }) {
             .set({
               name: name,
               email: email,
+              group: [],
               balance: 0,
             })
             .then((res) => {

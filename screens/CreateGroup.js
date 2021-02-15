@@ -12,7 +12,17 @@ import { Formik } from "formik";
 import { Dimensions } from "react-native";
 import { useEffect } from "react";
 import * as yup from "yup";
-import { nameExist, addGroup, groupExist } from "../components/firebaseCommands";
+import {
+  nameExist,
+  addGroup,
+  findUserId,
+  addFriendToGroup,
+  // groupExist,
+} from "../components/firebaseCommands";
+
+import * as firebase from "firebase";
+import "firebase/firestore";
+
 import { not } from "react-native-reanimated";
 
 var width = Dimensions.get("window").width - 80; //full width
@@ -21,9 +31,17 @@ var height = Dimensions.get("window").height; //full height
 export default function CreateGroup({ navigation }) {
   const [friends, setFriends] = useState([]);
 
+  const currUser = firebase.auth().currentUser;
+
   useEffect(() => {
     setFriends([]);
   }, [navigation]);
+
+  // const checkAndAddGroup = async (names, friends) => {
+  //   const check = await groupExist(names, friends);
+  //   if (check) {
+  //   }
+  // };
 
   const checkFriend = yup.object({
     friendName: yup
@@ -32,11 +50,16 @@ export default function CreateGroup({ navigation }) {
       .min(3)
       .test("Check if friend exist", "Friend Does Not Exist", (val) => {
         // console.log(nameExist(val));
+        console.log("HERE!!!");
         return nameExist(val, "email", "users");
       })
-      .test("friend not already in list", "Friend Included in Group Already", (val) => {
-        return friends.includes(val) === false;
-      })
+      .test(
+        "friend not already in list",
+        "Friend Included in Group Already",
+        (val) => {
+          return friends.includes(val) === false;
+        }
+      ),
   });
 
   const checkGroup = yup.object({
@@ -45,9 +68,10 @@ export default function CreateGroup({ navigation }) {
       .required()
       .test("Atleast 1 friend", "Group Requires Atleast One Friend", (val) => {
         return friends.length > 0;
-      }).test("does the group exist?", "Group Name Exist", (val) => {
-
-        return groupExist(val);
+      })
+      .test("does the group exist?", "Group Name Exist", (val) => {
+        // return groupExist(val);
+        return true;
       }),
   });
 
@@ -58,7 +82,9 @@ export default function CreateGroup({ navigation }) {
           initialValues={{ name: "" }}
           validationSchema={checkGroup}
           onSubmit={(values, actions) => {
-            addGroup(values.name, friends);
+            // checkAndAddGroup(values.name, friends);
+
+            addGroup(values.name, friends.concat(currUser.email));
             setFriends([]);
             actions.resetForm();
           }}
@@ -90,7 +116,6 @@ export default function CreateGroup({ navigation }) {
                         onChangeText={friendProps.handleChange("friendName")}
                         value={friendProps.values.friendName}
                       ></TextInput>
-
 
                       <TouchableOpacity
                         onPress={friendProps.handleSubmit}
@@ -158,7 +183,7 @@ const styles = StyleSheet.create({
     padding: 24,
     width: Dimensions.get("window").width,
     backgroundColor: "#ecf9f2",
-    height: height
+    height: height,
   },
   input: {
     backgroundColor: "#f2f2f2",
