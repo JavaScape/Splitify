@@ -103,7 +103,7 @@ export default function CreateGroup({ navigation }) {
   };
 
   return (
-    <ScrollView>
+    <ScrollView contentContainerStyle={styles.outside}>
       <View style={styles.container}>
         <Avatar
           size={200}
@@ -160,7 +160,7 @@ export default function CreateGroup({ navigation }) {
                     <View style={styles.friend}>
                       <TextInput
                         style={[styles.input, styles.small]}
-                        placeholder="Friend Name"
+                        placeholder="Email"
                         onChangeText={friendProps.handleChange("friendName")}
                         value={friendProps.values.friendName}
                       ></TextInput>
@@ -218,6 +218,7 @@ export default function CreateGroup({ navigation }) {
               >
                 <Text style={styles.appButtonText}>Create Group</Text>
               </TouchableOpacity>
+
             </View>
           )}
         </Formik>
@@ -227,15 +228,19 @@ export default function CreateGroup({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  outside: {
+    height: "100%",
+    backgroundColor: "#ecf9f2",
+  },
   container: {
-    padding: 24,
+    padding: 20,
     width: Dimensions.get("window").width,
     backgroundColor: "#ecf9f2",
-    height: height,
     display: "flex",
     flexDirection: "column",
     justifyContent: "flex-start",
     alignItems: "center",
+    height: "auto"
   },
   input: {
     backgroundColor: "#f2f2f2",
