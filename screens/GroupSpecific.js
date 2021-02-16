@@ -1,5 +1,4 @@
 import React from "react";
-
 import {
   StyleSheet,
   View,
@@ -7,25 +6,22 @@ import {
   TouchableOpacity,
   Dimensions,
 } from "react-native";
+
+import { Title } from "react-native-paper";
+
 var width = Dimensions.get("window").width - 80; //full width
 var height = Dimensions.get("window").height; //full height
 
-export default function Group({ navigation }) {
+export default function GroupSpecific({ navigation }) {
   return (
     <View style={styles.container}>
-      <TouchableOpacity
+      <Title style={styles.appButtonText}>Something</Title>
+      {/* <TouchableOpacity
         onPress={() => navigation.push("CreateGroup")}
         style={styles.appButtonContainer}
       >
         <Text style={styles.appButtonText}>Create Group</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        onPress={() => navigation.push("GroupSpecific")}
-        style={styles.appButtonContainer}
-      >
-        <Text style={styles.appButtonText}>View Group</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 }
@@ -45,7 +41,7 @@ const styles = StyleSheet.create({
   },
   appButtonText: {
     fontSize: 15,
-    color: "#fff",
+    color: "black",
     fontWeight: "bold",
     alignSelf: "center",
     textTransform: "uppercase",

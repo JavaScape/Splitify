@@ -3,6 +3,8 @@ import { UserContext } from "../components/userContext";
 import * as firebase from "firebase";
 import { Dimensions } from "react-native";
 
+import { useEffect } from "react";
+
 var width = Dimensions.get("window").width - 150; //full width
 var height = Dimensions.get("window").height; //full height
 
@@ -28,6 +30,29 @@ export default function Login({ navigation }) {
   const [password, setPassword] = useState("");
 
   const { user, setUser } = useContext(UserContext);
+
+  useEffect(() => {
+    const checkChange = () => {
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user != null) {
+          firebase
+            .firestore()
+            .collection("users")
+            .doc(user.uid)
+            .get()
+            .then((document) => {
+              setUser(document);
+            })
+            .catch((e) => {
+              console.log(e);
+            });
+          navigation.push("Main");
+        }
+      });
+    };
+
+    checkChange();
+  }, []);
 
   const loginUser = () => {
     //validate email

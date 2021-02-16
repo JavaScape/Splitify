@@ -11,6 +11,7 @@ import {
   Alert,
   TouchableOpacity,
 } from "react-native";
+
 import * as firebase from "firebase";
 import { UserContext } from "../components/userContext";
 
@@ -114,7 +115,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffe6e6",
   },
   text: {
-    fontSize: 30,
+    fontSize: 36,
+    fontWeight: "200",
   },
   appButtonContainer: {
     elevation: 8,
