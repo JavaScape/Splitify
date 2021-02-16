@@ -161,7 +161,7 @@ const findUserId = async (email) => {
       });
     })
     .catch((e) => {
-      console.log(e);
+      console.log("CONSOLE ERROR! " + e);
     });
 
   return toReturn;
@@ -192,7 +192,7 @@ const addGroup = async (name, friends) => {
     })
     .then((res) => {
       friends.forEach((friend) => {
-        addFriendToGroup(name, friend);
+        addFriendToGroup(newDocument.id, friend);
       });
     })
     .catch((err) => {
@@ -202,6 +202,25 @@ const addGroup = async (name, friends) => {
   return newDocument.id;
 };
 
+// Given a userID, get all the groups they are apart of
+const getAllGroups = async (userId) => {
+
+  console.log("hadfadfere");
+  var docRef = await database.collection("users").doc(userId);
+  var toReturn = null;
+  await docRef.get().then((doc) => {
+    if (doc.exists) {
+      toReturn = doc.data().group;
+      console.log("CHECKING " + doc.data().group);
+    }
+
+  }).catch((e) => {
+    console.log(e);
+  })
+  return toReturn;
+
+}
+
 export {
   uploadImage,
   getImage,
@@ -209,4 +228,5 @@ export {
   addFriendToGroup,
   addGroup,
   findUserId,
+  getAllGroups
 };
