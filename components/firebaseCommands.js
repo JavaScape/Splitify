@@ -205,13 +205,11 @@ const addGroup = async (name, friends) => {
 // Given a userID, get all the groups they are apart of
 const getAllGroups = async (userId) => {
 
-  console.log("hadfadfere");
   var docRef = await database.collection("users").doc(userId);
   var toReturn = null;
   await docRef.get().then((doc) => {
     if (doc.exists) {
       toReturn = doc.data().group;
-      console.log("CHECKING " + doc.data().group);
     }
 
   }).catch((e) => {
@@ -221,18 +219,20 @@ const getAllGroups = async (userId) => {
 
 }
 
-const getGroupName = async (groupId) => {
-  var docRef = await database.collection("groups").doc(groupId);
+const getGroup = async (groupId) => {
   var toReturn = null;
-  await docRef.get().then((doc) => {
-    if (doc.exists) {
-      toReturn = doc.data.name;
-    }
-  }).catch((e) => {
-    console.log(e);
-  })
+  await database
+    .collection("groups")
+    .doc(groupId)
+    .get()
+    .then((document) => {
+      toReturn = document.data();
+    })
+    .catch((e) => {
+      console.log(e);
+    });
   return toReturn;
-}
+};
 
 export {
   uploadImage,
@@ -242,5 +242,5 @@ export {
   addGroup,
   findUserId,
   getAllGroups,
-  getGroupName,
+  getGroup
 };
