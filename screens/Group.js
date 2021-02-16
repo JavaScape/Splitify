@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 
 import { StyleSheet, View, Text, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
-import { getAllGroups } from "../components/firebaseCommands";
+import { getAllGroups, getGroupName } from "../components/firebaseCommands";
 import * as firebase from "firebase";
+import { useIsFocused } from "@react-navigation/native";
 
 var width = Dimensions.get("window").width - 80; //full width
 var height = Dimensions.get("window").height; //full height
@@ -11,17 +12,24 @@ var height = Dimensions.get("window").height; //full height
 
 export default function Group({ navigation }) {
 
+    const isFocused = useIsFocused();
+
+    console.log("does this run" + navigation.getPar);
     const currUser = firebase.auth().currentUser;
     const [groups, setGroups] = useState([]);
 
     useEffect(() => {
+
         async function getGroup() {
             await getAllGroups(currUser.uid).then((res) => {
+                console.log(res);
                 setGroups(res);
             });
         }
         getGroup();
-    }, []);
+    }, [isFocused]);
+
+
 
 
     return (
@@ -34,9 +42,13 @@ export default function Group({ navigation }) {
 
                 {groups.map((item) => {
                     return (
-                        <TouchableOpacity style={[styles.appButtonContainer, { marginTop: 10 }]}>
+                        <TouchableOpacity style={[styles.appButtonContainer, { marginTop: 10 }]} key={item}>
                             <View style={[styles.appButtonContainer, { marginTop: 10 }]}>
-                                <Text style={[styles.appButtonText]}> {item} </Text>
+                                <Text style={[styles.appButtonText]}>
+                                    {
+                                        item
+                                    }
+                                </Text>
                             </View>
                         </TouchableOpacity>
                     );

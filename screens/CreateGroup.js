@@ -100,6 +100,9 @@ export default function CreateGroup({ navigation }) {
     console.log("Before: " + profilePic);
     setprofilePic(null);
     console.log("After: " + profilePic);
+    setFriends([]);
+
+    navigation.push('Group');
   };
 
   return (
@@ -133,8 +136,7 @@ export default function CreateGroup({ navigation }) {
             submitHandler(values.name);
             // addGroup(values.name, friends.concat(currUser.email));
 
-            setFriends([]);
-            actions.resetForm();
+
           }}
         >
           {(props) => (

@@ -221,6 +221,19 @@ const getAllGroups = async (userId) => {
 
 }
 
+const getGroupName = async (groupId) => {
+  var docRef = await database.collection("groups").doc(groupId);
+  var toReturn = null;
+  await docRef.get().then((doc) => {
+    if (doc.exists) {
+      toReturn = doc.data.name;
+    }
+  }).catch((e) => {
+    console.log(e);
+  })
+  return toReturn;
+}
+
 export {
   uploadImage,
   getImage,
@@ -228,5 +241,6 @@ export {
   addFriendToGroup,
   addGroup,
   findUserId,
-  getAllGroups
+  getAllGroups,
+  getGroupName,
 };
