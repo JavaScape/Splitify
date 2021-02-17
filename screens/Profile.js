@@ -21,15 +21,13 @@ import * as ImagePicker from "expo-image-picker";
 
 export default function Profile({ navigation }) {
   const { user, setUser } = useContext(UserContext);
-  const [profilePic, setprofilePic] = useState(null);
+  const [profilePic, setprofilePic] = useState("");
 
   const currUser = firebase.auth().currentUser;
   useEffect(() => {
-    async function getImageFromUser() {
-      const result = await database.getImage(currUser.uid);
+    database.getImage(currUser.uid).then((result) => {
       setprofilePic(result);
-    }
-    getImageFromUser();
+    });
   }, []);
 
   const pickImage = async () => {
@@ -73,13 +71,11 @@ export default function Profile({ navigation }) {
             uri: profilePic,
           }
         }
-        icon={
-          !profilePic && {
-            name: "user",
-            color: "rgb(192,192,192)",
-            type: "font-awesome",
-          }
-        }
+        icon={{
+          name: "user",
+          color: "rgb(192,192,192)",
+          type: "font-awesome",
+        }}
         onPress={() => pickImage()}
         activeOpacity={0.7}
       />

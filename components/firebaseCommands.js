@@ -43,12 +43,10 @@ const getImage = async (userId) => {
   try {
     const image = await storageRef.child("images/" + userId);
     var toReturn = null;
-    await image.getDownloadURL().then((url) => {
-      toReturn = url;
-    });
+    toReturn = await image.getDownloadURL();
     return toReturn;
   } catch (e) {
-    console.log("Error: " + e);
+    console.log("Error: ", e);
   }
 };
 
@@ -202,6 +200,34 @@ const addGroup = async (name, friends) => {
   return newDocument.id;
 };
 
+const getGroup = async (groupId) => {
+  var toReturn = null;
+  await database
+    .collection("groups")
+    .doc(groupId)
+    .get()
+    .then((document) => {
+      toReturn = document.data();
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+  return toReturn;
+};
+
+const getUserByEmail = async (email) => {
+  var toReturn = null;
+  const documents = await database
+    .collection("users")
+    .where("email", "==", email)
+    .get();
+  await documents.forEach((doc) => {
+    toReturn = [doc.id, doc.data()];
+    // console.log("Here: ", doc.id);
+  });
+  return toReturn;
+};
+
 export {
   uploadImage,
   getImage,
@@ -209,4 +235,6 @@ export {
   addFriendToGroup,
   addGroup,
   findUserId,
+  getGroup,
+  getUserByEmail,
 };
