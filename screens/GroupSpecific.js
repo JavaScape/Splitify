@@ -27,7 +27,7 @@ export default function GroupSpecific({ navigation }) {
   const [profilePic, setprofilePic] = useState();
   const [friends, setFriends] = useState([]);
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     console.log("I should print first");
@@ -48,6 +48,7 @@ export default function GroupSpecific({ navigation }) {
         });
       });
     });
+
     // console.log("Group returned: ", groupReturn);
     // await setGroup(groupReturn);
     // group2 = await getGroup(TEMP_ID);
@@ -73,67 +74,70 @@ export default function GroupSpecific({ navigation }) {
 
   return (
     <View style={styles.container}>
-      {/* <Spinner animation="border" role="status">
-        <span className="sr-only">Loading...</span>
-      </Spinner> */}
-      <View style={styles.bigBox}>
-        <View style={styles.innerContainer}>
-          <View style={{ marginVertical: 5 }}>
-            <Avatar
-              size={100}
-              rounded
-              overlayContainerStyle={{ backgroundColor: "grey" }}
-              // source={profilePic ? { uri: profilePic } : ""}
-              source={
-                profilePic
-                  ? {
-                      uri: profilePic,
-                    }
-                  : ""
-              }
-              icon={{
-                name: "user",
-                color: "rgb(192,192,192)",
-                type: "font-awesome",
-              }}
-              activeOpacity={0.7}
-            />
-          </View>
+      {loading ? (
+        <Text>I AM LOADING</Text>
+      ) : (
+        <View style={styles.bigBox}>
+          <View style={styles.innerContainer}>
+            <View style={{ marginVertical: 5 }}>
+              <Avatar
+                size={100}
+                rounded
+                overlayContainerStyle={{ backgroundColor: "grey" }}
+                // source={profilePic ? { uri: profilePic } : ""}
+                source={
+                  profilePic
+                    ? {
+                        uri: profilePic,
+                      }
+                    : ""
+                }
+                icon={{
+                  name: "user",
+                  color: "rgb(192,192,192)",
+                  type: "font-awesome",
+                }}
+                activeOpacity={0.7}
+              />
+            </View>
 
-          <Title style={styles.appButtonText}>{group ? group.name : ""}</Title>
+            <Title style={styles.appButtonText}>
+              {group ? group.name : ""}
+            </Title>
 
-          {/* <TouchableOpacity
+            {/* <TouchableOpacity
         onPress={() => navigation.push("CreateGroup")}
         style={styles.appButtonContainer}
       >
         <Text style={styles.appButtonText}>Create Group</Text>
       </TouchableOpacity> */}
-        </View>
+          </View>
 
-        <View>
-          {/* <Text>Over here: {friends[0][0]}</Text> */}
-          <Text>Group Members:</Text>
-          {/* <Card>
+          <View>
+            {/* <Text>Over here: {friends[0][0]}</Text> */}
+            <Text>Group Members:</Text>
+            {/* <Card>
             Some Text here
             <Card.Title>Let's see what you do</Card.Title>
             Some more Text Here
             <Card.Divider>Last text here</Card.Divider>
             After This
           </Card> */}
-        </View>
+          </View>
 
-        <View style={styles.cardBox}>
-          {friends
-            ? friends.map((element, index) => {
-                return (
-                  <TouchableOpacity style={styles.individualCard}>
-                    I am a TEXT!
-                  </TouchableOpacity>
-                );
-              })
-            : ""}
+          <View style={styles.cardBox}>
+            {friends
+              ? friends.map((element, index) => {
+                  return (
+                    <TouchableOpacity style={styles.individualCard}>
+                      <Text>I am a TEXT!</Text>
+                    </TouchableOpacity>
+                  );
+                })
+              : ""}
+          </View>
         </View>
-      </View>
+      )}
     </View>
   );
 }
@@ -159,7 +163,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-evenly",
     backgroundColor: "yellow",
-    borderRadius: "2rem",
+    borderRadius: 10,
   },
   cardBox: {
     height: "80%",
@@ -185,13 +189,13 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     textTransform: "uppercase",
     width: "50%",
-    fontWeight: 200,
-    fontFamily: "HelveticaNeue-CondensedBold",
+    fontWeight: "200",
+    // fontFamily: "HelveticaNeue-CondensedBold",
     textAlign: "center", // <-- the magic
   },
   individualCard: {
     backgroundColor: "orange",
-    borderRadius: "2rem",
+    borderRadius: 2,
     width: "30%",
     height: "50%",
   },
