@@ -15,8 +15,6 @@ import { Title } from "react-native-paper";
 
 import { getImage, getUserByEmail } from "./../components/firebaseCommands";
 
-import Spinner from "react-bootstrap/Spinner";
-
 var width = Dimensions.get("window").width - 80; //full width
 var height = Dimensions.get("window").height; //full height
 
