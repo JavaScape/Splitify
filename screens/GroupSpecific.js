@@ -21,7 +21,6 @@ var height = Dimensions.get("window").height; //full height
 const TEMP_ID = "fyR9lJWO40gKeBi2E1uv";
 
 export default function GroupSpecific({ navigation }) {
-  console.log("How many times will this run?");
   // WILL NEED TO GO INTO USEEFFECT LATER ON
   const [group, setGroup] = useState();
   const [profilePic, setprofilePic] = useState();
@@ -30,24 +29,43 @@ export default function GroupSpecific({ navigation }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log("I should print first");
     // async function setter() {
     // await getGroup(TEMP_ID);
 
     // const groupReturn = await getGroup(TEMP_ID);
-    getGroup(TEMP_ID).then((res) => {
-      setGroup(res);
-      getImage(res.groupId).then((photoId) => {
-        setprofilePic(photoId);
-      });
 
-      res.friends.forEach((friend) => {
-        getUserByEmail(friend).then((returnVal) => {
-          //          console.log("Returned val: ", returnVal);
-          setFriends((prev) => [...prev, returnVal]);
+    const loader = async () => {
+      if (!group) {
+        const groupVal = await getGroup(TEMP_ID);
+        console.log("groupVal: ", groupVal);
+        await setGroup(groupVal);
+        console.log("GROUP OVER HERE: ", group);
+        const image = await getImage(groupVal.groupId);
+        await setprofilePic(image);
+
+        await groupVal.friends.forEach((friend) => {
+          getUserByEmail(friend).then((returnVal) => {
+            setFriends((prev) => [...prev, returnVal]);
+          });
         });
-      });
-    });
+        setLoading(false);
+      }
+      // await getGroup(TEMP_ID).then((res) => {
+      //   setGroup(res);
+      //   getImage(res.groupId).then((photoId) => {
+      //     setprofilePic(photoId);
+      //   });
+
+      //   res.friends.forEach((friend) => {
+      //     getUserByEmail(friend).then((returnVal) => {
+      //       //          console.log("Returned val: ", returnVal);
+      //       setFriends((prev) => [...prev, returnVal]);
+      //     });
+      //   });
+      // });
+    };
+
+    loader();
 
     // console.log("Group returned: ", groupReturn);
     // await setGroup(groupReturn);
@@ -67,10 +85,7 @@ export default function GroupSpecific({ navigation }) {
     // }
 
     // setter();
-  }, []);
-
-  console.log("group: ", group);
-  console.log("friends: ", friends);
+  }, [loading]);
 
   return (
     <View style={styles.container}>
@@ -130,7 +145,7 @@ export default function GroupSpecific({ navigation }) {
               ? friends.map((element, index) => {
                   return (
                     <TouchableOpacity style={styles.individualCard}>
-                      <Text>I am a TEXT!</Text>
+                      <Text>{element[1].name}</Text>
                     </TouchableOpacity>
                   );
                 })
