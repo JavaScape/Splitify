@@ -106,8 +106,8 @@ export default function CreateGroup({ navigation }) {
   };
 
   return (
-    <ScrollView>
-      <View contentContainerStyle={styles.outside}>
+    <View contentContainerStyle={styles.outside}>
+      <ScrollView>
         <View style={styles.container}>
           <Avatar
             size={200}
@@ -226,8 +226,8 @@ export default function CreateGroup({ navigation }) {
             )}
           </Formik>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 }
 

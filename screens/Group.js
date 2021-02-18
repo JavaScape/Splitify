@@ -14,6 +14,7 @@ import {
   getGroup,
   getImage,
 } from "../components/firebaseCommands";
+import { useIsFocused } from "@react-navigation/native";
 
 var width = Dimensions.get("window").width - 80; //full width
 var height = Dimensions.get("window").height; //full height
@@ -22,6 +23,7 @@ var width = Dimensions.get("window").width - 80; //full width
 var height = Dimensions.get("window").height; //full height
 
 export default function Group({ navigation }) {
+  const focused = useIsFocused();
   const currUser = firebase.auth().currentUser;
   const [groupJson, setGroupJson] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -37,10 +39,13 @@ export default function Group({ navigation }) {
       setGroupJson(groups);
       setLoading(false);
     })();
-  }, []);
+  }, [focused]);
 
   return (
-    <View contentContainerStyle={styles.outside}>
+    <View
+      contentContainerStyle={styles.outside}
+      showsHorizontalScrollIndicator={false}
+    >
       {!loading ? (
         <ScrollView>
           <View style={styles.container}>
@@ -50,6 +55,7 @@ export default function Group({ navigation }) {
                 styles.appButtonContainer,
                 { backgroundColor: "#ff8080" },
                 { marginTop: 20 },
+                { height: 50 },
               ]}
             >
               <Text style={styles.appButtonText}>Create group</Text>
@@ -148,12 +154,10 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     alignSelf: "center",
     textTransform: "uppercase",
-    width: "100%",
     textAlign: "center", // <-- the magic
+    width: "40%",
   },
   wholeCard: {
-    paddingLeft: 40,
-    paddingRight: 10,
     paddingTop: 5,
     paddingBottom: 5,
   },
