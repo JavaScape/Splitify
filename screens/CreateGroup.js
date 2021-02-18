@@ -102,7 +102,7 @@ export default function CreateGroup({ navigation }) {
     console.log("After: " + profilePic);
     setFriends([]);
 
-    navigation.push('Group');
+    navigation.navigate("Push");
   };
 
   return (
@@ -135,8 +135,6 @@ export default function CreateGroup({ navigation }) {
             // checkAndAddGroup(values.name, friends);
             submitHandler(values.name);
             // addGroup(values.name, friends.concat(currUser.email));
-
-
           }}
         >
           {(props) => (
@@ -220,7 +218,6 @@ export default function CreateGroup({ navigation }) {
               >
                 <Text style={styles.appButtonText}>Create Group</Text>
               </TouchableOpacity>
-
             </View>
           )}
         </Formik>
@@ -242,7 +239,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "flex-start",
     alignItems: "center",
-    height: "auto"
+    height: "auto",
   },
   input: {
     backgroundColor: "#f2f2f2",
