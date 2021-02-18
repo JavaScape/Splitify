@@ -23,11 +23,20 @@ export default function Profile({ navigation }) {
   const { user, setUser } = useContext(UserContext);
   const [profilePic, setprofilePic] = useState("");
 
+  const [loading, setLoading] = useState(true);
+
   const currUser = firebase.auth().currentUser;
+
   useEffect(() => {
-    database.getImage(currUser.uid).then((result) => {
-      setprofilePic(result);
-    });
+    (async () => {
+      const image = await database.getImage(currUser.uid);
+      setprofilePic(image);
+      setLoading(false);
+    })();
+
+    // database.getImage(currUser.uid).then((result) => {
+    //   setprofilePic(result);
+    // });
   }, []);
 
   const pickImage = async () => {
@@ -62,23 +71,27 @@ export default function Profile({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Avatar
-        size={200}
-        rounded
-        overlayContainerStyle={{ backgroundColor: "grey" }}
-        source={
-          profilePic && {
-            uri: profilePic,
+      {!loading ? (
+        <Avatar
+          size={200}
+          rounded
+          overlayContainerStyle={{ backgroundColor: "grey" }}
+          source={
+            profilePic && {
+              uri: profilePic,
+            }
           }
-        }
-        icon={{
-          name: "user",
-          color: "rgb(192,192,192)",
-          type: "font-awesome",
-        }}
-        onPress={() => pickImage()}
-        activeOpacity={0.7}
-      />
+          icon={{
+            name: "user",
+            color: "rgb(192,192,192)",
+            type: "font-awesome",
+          }}
+          onPress={() => pickImage()}
+          activeOpacity={0.7}
+        />
+      ) : (
+        <Text>I am a loading screen</Text>
+      )}
 
       {user != null && <Text style={styles.text}>{user.data().email}</Text>}
       <Text style={styles.text}>{user != null && user.data().name}</Text>

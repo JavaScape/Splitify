@@ -18,9 +18,13 @@ import {
 var width = Dimensions.get("window").width - 80; //full width
 var height = Dimensions.get("window").height; //full height
 
+var width = Dimensions.get("window").width - 80; //full width
+var height = Dimensions.get("window").height; //full height
+
 export default function Group({ navigation }) {
   const currUser = firebase.auth().currentUser;
   const [groupJson, setGroupJson] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
@@ -31,68 +35,73 @@ export default function Group({ navigation }) {
         return { ...g, pic: imgs[i] };
       });
       setGroupJson(groups);
+      setLoading(false);
     })();
   }, []);
 
   return (
     <View contentContainerStyle={styles.outside}>
-      <ScrollView>
-        <View style={styles.container}>
-          <TouchableOpacity
-            onPress={() => navigation.push("CreateGroup")}
-            style={[
-              styles.appButtonContainer,
-              { backgroundColor: "#ff8080" },
-              { marginTop: 20 },
-            ]}
-          >
-            <Text style={styles.appButtonText}>Create group</Text>
-          </TouchableOpacity>
+      {!loading ? (
+        <ScrollView>
+          <View style={styles.container}>
+            <TouchableOpacity
+              onPress={() => navigation.push("CreateGroup")}
+              style={[
+                styles.appButtonContainer,
+                { backgroundColor: "#ff8080" },
+                { marginTop: 20 },
+              ]}
+            >
+              <Text style={styles.appButtonText}>Create group</Text>
+            </TouchableOpacity>
 
-          {groupJson.map((item, k) => {
-            return (
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate("GroupSpecific", groupJson[k])
-                }
-                style={[styles.appButtonContainer]}
-                key={k}
-              >
-                <View style={[{ width: "100%" }]}>
-                  <View style={styles.card}>
-                    <View style={styles.wholeCard}>
-                      <Avatar
-                        size={75}
-                        rounded
-                        overlayContainerStyle={{ backgroundColor: "grey" }}
-                        source={
-                          item.pic && {
-                            uri: item.pic,
+            {groupJson.map((item, k) => {
+              return (
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate("GroupSpecific", groupJson[k])
+                  }
+                  style={[styles.appButtonContainer]}
+                  key={k}
+                >
+                  <View style={[{ width: "100%" }]}>
+                    <View style={styles.card}>
+                      <View style={styles.wholeCard}>
+                        <Avatar
+                          size={75}
+                          rounded
+                          overlayContainerStyle={{ backgroundColor: "grey" }}
+                          source={
+                            item.pic && {
+                              uri: item.pic,
+                            }
                           }
-                        }
-                        icon={{
-                          name: "user",
-                          color: "#669999",
-                          type: "font-awesome",
-                        }}
-                        activeOpacity={0.7}
-                      />
+                          icon={{
+                            name: "user",
+                            color: "#669999",
+                            type: "font-awesome",
+                          }}
+                          activeOpacity={0.7}
+                        />
+                      </View>
+                      <Text style={[styles.appButtonText]}>{item.name}</Text>
                     </View>
-                    <Text style={[styles.appButtonText]}>{item.name}</Text>
                   </View>
-                </View>
-              </TouchableOpacity>
-            );
-          })}
-          {groupJson.length == 0 && (
-            <View style={[styles.appButtonContainer]}>
-              <Text style={[styles.appButtonText, { padding: 15 }]}>
-                Currently, You are not apart of any group.{" "}
-              </Text>
-            </View>
-          )}
-        </View>
-      </ScrollView>
+                </TouchableOpacity>
+              );
+            })}
+            {groupJson.length == 0 && (
+              <View style={[styles.appButtonContainer]}>
+                <Text style={[styles.appButtonText, { padding: 15 }]}>
+                  Currently, You are not apart of any group.{" "}
+                </Text>
+              </View>
+            )}
+          </View>
+        </ScrollView>
+      ) : (
+        <Text>Something here</Text>
+      )}
     </View>
   );
 }
@@ -101,13 +110,17 @@ const styles = StyleSheet.create({
   outside: {
     height: "100%",
     backgroundColor: "#ecf9f2",
+
     alignItems: "center",
+    justifyContent: "center",
   },
   container: {
     height: "auto",
     paddingBottom: 20,
     paddingTop: 20,
     width: "85%",
+    alignItems: "center",
+    justifyContent: "center",
   },
   appButtonContainer: {
     elevation: 24,
