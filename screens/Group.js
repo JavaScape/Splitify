@@ -35,60 +35,65 @@ export default function Group({ navigation }) {
   }, []);
 
   return (
-    <ScrollView
-      contentContainerStyle={styles.outside}
-      showsVerticalScrollIndicator={false}
-    >
-      <View style={styles.container}>
-        <TouchableOpacity
-          onPress={() => navigation.push("CreateGroup")}
-          style={[
-            styles.appButtonContainer,
-            { backgroundColor: "#ff8080" },
-            { marginTop: 20 },
-          ]}
-        >
-          <Text style={styles.appButtonText}>Create group</Text>
-        </TouchableOpacity>
+    <View contentContainerStyle={styles.outside}>
+      <ScrollView>
+        <View style={styles.container}>
+          <TouchableOpacity
+            onPress={() => navigation.push("CreateGroup")}
+            style={[
+              styles.appButtonContainer,
+              { backgroundColor: "#ff8080" },
+              { marginTop: 20 },
+            ]}
+          >
+            <Text style={styles.appButtonText}>Create group</Text>
+          </TouchableOpacity>
 
-        {groupJson.map((item, k) => {
-          return (
-            <TouchableOpacity style={[styles.appButtonContainer]} key={k}>
-              <View style={[{ width: "100%" }]}>
-                <View style={styles.card}>
-                  <View style={styles.wholeCard}>
-                    <Avatar
-                      size={75}
-                      rounded
-                      overlayContainerStyle={{ backgroundColor: "grey" }}
-                      source={
-                        item.pic && {
-                          uri: item.pic,
+          {groupJson.map((item, k) => {
+            return (
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate("GroupSpecific", groupJson[k])
+                }
+                style={[styles.appButtonContainer]}
+                key={k}
+              >
+                <View style={[{ width: "100%" }]}>
+                  <View style={styles.card}>
+                    <View style={styles.wholeCard}>
+                      <Avatar
+                        size={75}
+                        rounded
+                        overlayContainerStyle={{ backgroundColor: "grey" }}
+                        source={
+                          item.pic && {
+                            uri: item.pic,
+                          }
                         }
-                      }
-                      icon={{
-                        name: "user",
-                        color: "#669999",
-                        type: "font-awesome",
-                      }}
-                      activeOpacity={0.7}
-                    />
+                        icon={{
+                          name: "user",
+                          color: "#669999",
+                          type: "font-awesome",
+                        }}
+                        activeOpacity={0.7}
+                      />
+                    </View>
+                    <Text style={[styles.appButtonText]}>{item.name}</Text>
                   </View>
-                  <Text style={[styles.appButtonText]}>{item.name}</Text>
                 </View>
-              </View>
-            </TouchableOpacity>
-          );
-        })}
-        {groupJson.length == 0 && (
-          <View style={[styles.appButtonContainer]}>
-            <Text style={[styles.appButtonText, { padding: 15 }]}>
-              Currently, You are not apart of any group.{" "}
-            </Text>
-          </View>
-        )}
-      </View>
-    </ScrollView>
+              </TouchableOpacity>
+            );
+          })}
+          {groupJson.length == 0 && (
+            <View style={[styles.appButtonContainer]}>
+              <Text style={[styles.appButtonText, { padding: 15 }]}>
+                Currently, You are not apart of any group.{" "}
+              </Text>
+            </View>
+          )}
+        </View>
+      </ScrollView>
+    </View>
   );
 }
 
@@ -122,6 +127,7 @@ const styles = StyleSheet.create({
     shadowRadius: 8.3,
     elevation: 13,
     marginBottom: 15,
+    height: 100,
   },
   appButtonText: {
     fontSize: 13,

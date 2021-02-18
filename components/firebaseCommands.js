@@ -43,12 +43,10 @@ const getImage = async (userId) => {
   try {
     const image = await storageRef.child("images/" + userId);
     var toReturn = null;
-    await image.getDownloadURL().then((url) => {
-      toReturn = url;
-    });
+    toReturn = await image.getDownloadURL();
     return toReturn;
   } catch (e) {
-    console.log("Error: " + e);
+    console.log("Error: ", e);
   }
 };
 
@@ -204,20 +202,20 @@ const addGroup = async (name, friends) => {
 
 // Given a userID, get all the groups they are apart of
 const getAllGroups = async (userId) => {
-
   var docRef = await database.collection("users").doc(userId);
   var toReturn = null;
-  await docRef.get().then((doc) => {
-    if (doc.exists) {
-      toReturn = doc.data().group;
-    }
-
-  }).catch((e) => {
-    console.log(e);
-  })
+  await docRef
+    .get()
+    .then((doc) => {
+      if (doc.exists) {
+        toReturn = doc.data().group;
+      }
+    })
+    .catch((e) => {
+      console.log(e);
+    });
   return toReturn;
-
-}
+};
 
 const getGroup = async (groupId) => {
   var toReturn = null;
@@ -234,6 +232,19 @@ const getGroup = async (groupId) => {
   return toReturn;
 };
 
+const getUserByEmail = async (email) => {
+  var toReturn = null;
+  const documents = await database
+    .collection("users")
+    .where("email", "==", email)
+    .get();
+  await documents.forEach((doc) => {
+    toReturn = [doc.id, doc.data()];
+    // console.log("Here: ", doc.id);
+  });
+  return toReturn;
+};
+
 export {
   uploadImage,
   getImage,
@@ -242,5 +253,6 @@ export {
   addGroup,
   findUserId,
   getAllGroups,
-  getGroup
+  getGroup,
+  getUserByEmail,
 };

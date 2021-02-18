@@ -11,6 +11,7 @@ import {
   Alert,
   TouchableOpacity,
 } from "react-native";
+
 import * as firebase from "firebase";
 import { UserContext } from "../components/userContext";
 
@@ -20,15 +21,13 @@ import * as ImagePicker from "expo-image-picker";
 
 export default function Profile({ navigation }) {
   const { user, setUser } = useContext(UserContext);
-  const [profilePic, setprofilePic] = useState(null);
+  const [profilePic, setprofilePic] = useState("");
 
   const currUser = firebase.auth().currentUser;
   useEffect(() => {
-    async function getImageFromUser() {
-      const result = await database.getImage(currUser.uid);
+    database.getImage(currUser.uid).then((result) => {
       setprofilePic(result);
-    }
-    getImageFromUser();
+    });
   }, []);
 
   const pickImage = async () => {
@@ -72,13 +71,11 @@ export default function Profile({ navigation }) {
             uri: profilePic,
           }
         }
-        icon={
-          !profilePic && {
-            name: "user",
-            color: "rgb(192,192,192)",
-            type: "font-awesome",
-          }
-        }
+        icon={{
+          name: "user",
+          color: "rgb(192,192,192)",
+          type: "font-awesome",
+        }}
         onPress={() => pickImage()}
         activeOpacity={0.7}
       />
@@ -114,7 +111,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffe6e6",
   },
   text: {
-    fontSize: 30,
+    fontSize: 36,
+    fontWeight: "200",
   },
   appButtonContainer: {
     elevation: 8,
