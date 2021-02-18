@@ -118,8 +118,8 @@ const styles = StyleSheet.create({
     height: "auto",
     paddingBottom: 20,
     paddingTop: 20,
-    width: "85%",
-    alignItems: "center",
+    width: "95%",
+    alignSelf: "center",
     justifyContent: "center",
   },
   appButtonContainer: {
@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
     textAlign: "center", // <-- the magic
   },
   wholeCard: {
-    paddingLeft: 25,
+    paddingLeft: 40,
     paddingRight: 10,
     paddingTop: 5,
     paddingBottom: 5,
