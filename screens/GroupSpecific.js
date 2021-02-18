@@ -1,19 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
+  Dimensions,
   StyleSheet,
-  View,
   Text,
   TouchableOpacity,
-  Dimensions,
+  View,
 } from "react-native";
-
-import { getGroup } from "./../components/firebaseCommands";
-
 import { Avatar } from "react-native-elements";
-
 import { Title } from "react-native-paper";
-
-import { getImage, getUserByEmail } from "./../components/firebaseCommands";
+import {
+  getGroup,
+  getImage,
+  getUserByEmail,
+} from "./../components/firebaseCommands";
 
 var width = Dimensions.get("window").width - 80; //full width
 var height = Dimensions.get("window").height; //full height
@@ -168,7 +167,7 @@ const styles = StyleSheet.create({
   bigBox: {
     alignItems: "center",
     justifyContent: "center",
-    width: "80%",
+    width: "98%",
     height: "80%",
     backgroundColor: "green",
   },
@@ -182,7 +181,7 @@ const styles = StyleSheet.create({
   },
   cardBox: {
     height: "80%",
-    width: "80%",
+    width: "100%",
     backgroundColor: "blue",
     flexDirection: "row",
     justifyContent: "space-evenly",

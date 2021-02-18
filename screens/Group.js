@@ -1,12 +1,12 @@
 import React from "react";
-
 import {
+  Dimensions,
   StyleSheet,
-  View,
   Text,
   TouchableOpacity,
-  Dimensions,
+  View,
 } from "react-native";
+
 var width = Dimensions.get("window").width - 80; //full width
 var height = Dimensions.get("window").height; //full height
 
