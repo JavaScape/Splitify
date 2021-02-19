@@ -4,6 +4,7 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  ScrollView,
   View,
 } from "react-native";
 import { Avatar } from "react-native-elements";
@@ -17,9 +18,8 @@ import {
 var width = Dimensions.get("window").width - 80; //full width
 var height = Dimensions.get("window").height; //full height
 
-const TEMP_ID = "fyR9lJWO40gKeBi2E1uv";
-
-export default function GroupSpecific({ navigation }) {
+export default function GroupSpecific({ route, navigation }) {
+  const TEMP_ID = route.params.groupId;
   // WILL NEED TO GO INTO USEEFFECT LATER ON
   const [group, setGroup] = useState();
   const [profilePic, setprofilePic] = useState();
@@ -42,12 +42,19 @@ export default function GroupSpecific({ navigation }) {
         const image = await getImage(groupVal.groupId);
         await setprofilePic(image);
 
-        await groupVal.friends.forEach((friend) => {
-          getUserByEmail(friend).then((returnVal) => {
-            setFriends((prev) => [...prev, returnVal]);
-          });
-        });
-        setLoading(false);
+        // let groups = await Promise.all(gids.map((g) => getGroup(g)));
+        // const imgs = await Promise.all(gids.map((g) => getImage(g)));
+
+        let groups = await Promise.all(
+          groupVal.friends.map((g) => getUserByEmail(g))
+        );
+        setFriends(groups);
+        // await groupVal.friends.forEach((friend) => {
+        //   getUserByEmail(friend).then((returnVal) => {
+        //     setFriends((prev) => [...prev, returnVal]);
+        //   });
+        // });
+        await setLoading(false);
       }
       // await getGroup(TEMP_ID).then((res) => {
       //   setGroup(res);
@@ -143,7 +150,7 @@ export default function GroupSpecific({ navigation }) {
             {friends
               ? friends.map((element, index) => {
                   return (
-                    <TouchableOpacity style={styles.individualCard}>
+                    <TouchableOpacity style={styles.individualCard} key={index}>
                       <Text>{element[1].name}</Text>
                     </TouchableOpacity>
                   );
@@ -161,15 +168,18 @@ const styles = StyleSheet.create({
     padding: 24,
     backgroundColor: "#ecf9f2",
     height: height,
-    backgroundColor: "purple",
+    backgroundColor: "#FFFAFA",
     alignItems: "center",
+    height: "100%",
+    width: "100%",
+    justifyContent: "center",
   },
   bigBox: {
     alignItems: "center",
-    justifyContent: "center",
-    width: "98%",
-    height: "80%",
-    backgroundColor: "green",
+    justifyContent: "space-evenly",
+    width: "100%",
+    height: "90%",
+    backgroundColor: "#FFFAFA",
   },
   innerContainer: {
     display: "flex",
@@ -178,9 +188,10 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     backgroundColor: "yellow",
     borderRadius: 10,
+    height: "20%",
   },
   cardBox: {
-    height: "80%",
+    height: "20%",
     width: "100%",
     backgroundColor: "blue",
     flexDirection: "row",

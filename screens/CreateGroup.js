@@ -100,130 +100,134 @@ export default function CreateGroup({ navigation }) {
     console.log("Before: " + profilePic);
     setprofilePic(null);
     console.log("After: " + profilePic);
+    setFriends([]);
+
+    navigation.push("Group");
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.outside}>
-      <View style={styles.container}>
-        <Avatar
-          size={200}
-          rounded
-          overlayContainerStyle={{ backgroundColor: "grey" }}
-          source={
-            profilePic && {
-              uri: profilePic,
+    <View contentContainerStyle={styles.outside}>
+      <ScrollView>
+        <View style={styles.container}>
+          <Avatar
+            size={200}
+            rounded
+            overlayContainerStyle={{ backgroundColor: "grey" }}
+            source={
+              profilePic && {
+                uri: profilePic,
+              }
             }
-          }
-          icon={
-            !profilePic && {
-              name: "user",
-              color: "rgb(192,192,192)",
-              type: "font-awesome",
+            icon={
+              !profilePic && {
+                name: "user",
+                color: "rgb(192,192,192)",
+                type: "font-awesome",
+              }
             }
-          }
-          onPress={() => pickImage()}
-          activeOpacity={0.7}
-        />
+            onPress={() => pickImage()}
+            activeOpacity={0.7}
+          />
 
-        <Formik
-          initialValues={{ name: "" }}
-          validationSchema={checkGroup}
-          onSubmit={(values, actions) => {
-            // checkAndAddGroup(values.name, friends);
-            submitHandler(values.name);
-            // addGroup(values.name, friends.concat(currUser.email));
+          <Formik
+            initialValues={{ name: "" }}
+            validationSchema={checkGroup}
+            onSubmit={(values, actions) => {
+              // checkAndAddGroup(values.name, friends);
+              submitHandler(values.name);
+              // addGroup(values.name, friends.concat(currUser.email));
+            }}
+          >
+            {(props) => (
+              <View>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Group Name"
+                  onChangeText={props.handleChange("name")}
+                  value={props.values.name}
+                ></TextInput>
+                <Text>{props.errors.name}</Text>
 
-            setFriends([]);
-            actions.resetForm();
-          }}
-        >
-          {(props) => (
-            <View>
-              <TextInput
-                style={styles.input}
-                placeholder="Group Name"
-                onChangeText={props.handleChange("name")}
-                value={props.values.name}
-              ></TextInput>
-              <Text>{props.errors.name}</Text>
+                <Formik
+                  initialValues={{ friendName: "" }}
+                  validationSchema={checkFriend}
+                  onSubmit={(values, actions) => {
+                    setFriends((prevArray) => [
+                      ...prevArray,
+                      values.friendName,
+                    ]);
+                    actions.resetForm();
+                  }}
+                >
+                  {(friendProps) => (
+                    <View>
+                      <View style={styles.friend}>
+                        <TextInput
+                          style={[styles.input, styles.small]}
+                          placeholder="Email"
+                          onChangeText={friendProps.handleChange("friendName")}
+                          value={friendProps.values.friendName}
+                        ></TextInput>
 
-              <Formik
-                initialValues={{ friendName: "" }}
-                validationSchema={checkFriend}
-                onSubmit={(values, actions) => {
-                  setFriends((prevArray) => [...prevArray, values.friendName]);
-                  actions.resetForm();
-                }}
-              >
-                {(friendProps) => (
-                  <View>
-                    <View style={styles.friend}>
-                      <TextInput
-                        style={[styles.input, styles.small]}
-                        placeholder="Email"
-                        onChangeText={friendProps.handleChange("friendName")}
-                        value={friendProps.values.friendName}
-                      ></TextInput>
+                        <TouchableOpacity
+                          onPress={friendProps.handleSubmit}
+                          style={styles.appButtonContainer}
+                        >
+                          <Text style={styles.appButtonText}>Add</Text>
+                        </TouchableOpacity>
 
-                      <TouchableOpacity
-                        onPress={friendProps.handleSubmit}
-                        style={styles.appButtonContainer}
-                      >
-                        <Text style={styles.appButtonText}>Add</Text>
-                      </TouchableOpacity>
-
-                      {/* <Button title='Add' onPress={friendProps.handleSubmit} ></Button> */}
-                    </View>
-                    <Text>{friendProps.errors.friendName}</Text>
-                    {friends.length == 0 && (
-                      <View
-                        style={[
-                          styles.appButtonContainer,
-                          { width: Dimensions.get("window").width - 70 },
-                          { marginTop: 10 },
-                        ]}
-                      >
-                        <Text style={styles.appButtonText}>
-                          Required Atleast 1 Friend
-                        </Text>
+                        {/* <Button title='Add' onPress={friendProps.handleSubmit} ></Button> */}
                       </View>
-                    )}
-
-                    {friends.map((item) => {
-                      return (
+                      <Text>{friendProps.errors.friendName}</Text>
+                      {friends.length == 0 && (
                         <View
                           style={[
                             styles.appButtonContainer,
-                            { backgroundColor: "#94b8b8" },
                             { width: Dimensions.get("window").width - 70 },
                             { marginTop: 10 },
                           ]}
-                          key={item}
                         >
-                          <Text style={styles.appButtonText}>{item}</Text>
+                          <Text style={styles.appButtonText}>
+                            Required Atleast 1 Friend
+                          </Text>
                         </View>
-                      );
-                    })}
-                  </View>
-                )}
-              </Formik>
+                      )}
 
-              <TouchableOpacity
-                onPress={props.handleSubmit}
-                style={[
-                  styles.appButtonContainer,
-                  styles.normal1,
-                  styles.normal2,
-                ]}
-              >
-                <Text style={styles.appButtonText}>Create Group</Text>
-              </TouchableOpacity>
+                      {friends.map((item) => {
+                        return (
+                          <View
+                            style={[
+                              styles.appButtonContainer,
+                              { backgroundColor: "#94b8b8" },
+                              { width: Dimensions.get("window").width - 70 },
+                              { marginTop: 10 },
+                            ]}
+                            key={item}
+                          >
+                            <Text style={styles.appButtonText}>{item}</Text>
+                          </View>
+                        );
+                      })}
+                    </View>
+                  )}
+                </Formik>
 
-            </View>
-          )}
-        </Formik>
-      </View>
-    </ScrollView>
+                <TouchableOpacity
+                  onPress={props.handleSubmit}
+                  style={[
+                    styles.appButtonContainer,
+                    styles.normal1,
+                    styles.normal2,
+                  ]}
+                >
+                  <Text style={styles.appButtonText}>Create Group</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          </Formik>
+        </View>
+      </ScrollView>
+    </View>
   );
 }
 
@@ -240,7 +244,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "flex-start",
     alignItems: "center",
-    height: "auto"
+    height: "auto",
   },
   input: {
     backgroundColor: "#f2f2f2",
