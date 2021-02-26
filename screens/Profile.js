@@ -93,8 +93,8 @@ export default function Profile({ navigation }) {
         <Text>I am a loading screen</Text>
       )}
 
-      {user != null && <Text style={styles.text}>{user.data().email}</Text>}
-      <Text style={styles.text}>{user != null && user.data().name}</Text>
+      {user != null && <Text style={styles.text}>{user.email}</Text>}
+      <Text style={styles.text}>{user != null && user.name}</Text>
       <View style={styles.sidebyside}>
         <TouchableOpacity
           onPress={() => logoutUser()}

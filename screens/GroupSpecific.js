@@ -15,8 +15,8 @@ import {
   getUserByEmail,
 } from "./../components/firebaseCommands";
 
-var width = Dimensions.get("window").width - 80; //full width
-var height = Dimensions.get("window").height; //full height
+var width = Dimensions.get("window").width - 80;
+var height = Dimensions.get("window").height;
 
 export default function GroupSpecific({ route, navigation }) {
   const TEMP_ID = route.params.groupId;

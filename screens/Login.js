@@ -39,13 +39,12 @@ export default function Login({ navigation }) {
             .firestore()
             .collection("users")
             .doc(user.uid)
-            .get()
-            .then((document) => {
-              setUser(document);
-            })
-            .catch((e) => {
-              console.log(e);
+            .onSnapshot((document) => {
+              if (document.exists && document.data()) {
+                setUser(document.data());
+              }
             });
+
           navigation.push("Main");
         }
       });
@@ -61,14 +60,6 @@ export default function Login({ navigation }) {
       .auth()
       .signInWithEmailAndPassword(email, password)
       .then((result) => {
-        firebase
-          .firestore()
-          .collection("users")
-          .doc(result.user.uid)
-          .get()
-          .then((user) => {
-            setUser(user);
-          });
         navigation.push("Main");
       })
       .catch((err) => {
