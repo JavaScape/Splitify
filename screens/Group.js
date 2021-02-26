@@ -1,5 +1,6 @@
 import * as firebase from "firebase";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { UserContext } from "../components/userContext";
 import {
   Dimensions,
   ScrollView,
@@ -27,19 +28,21 @@ export default function Group({ navigation }) {
   const currUser = firebase.auth().currentUser;
   const [groupJson, setGroupJson] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { user } = useContext(UserContext);
 
   useEffect(() => {
     (async () => {
-      let gids = await getAllGroups(currUser.uid);
-      let groups = await Promise.all(gids.map((g) => getGroup(g)));
-      const imgs = await Promise.all(gids.map((g) => getImage(g)));
-      groups = groups.map((g, i) => {
-        return { ...g, pic: imgs[i] };
-      });
-      setGroupJson(groups);
+      if (user && user.group && user.group.length) {
+        let groups = await Promise.all(user.group.map((g) => getGroup(g)));
+        const imgs = await Promise.all(user.group.map((g) => getImage(g)));
+        groups = groups.map((g, i) => {
+          return { ...g, pic: imgs[i] };
+        });
+        setGroupJson(groups);
+      }
       setLoading(false);
     })();
-  }, [focused]);
+  }, [focused, user]);
 
   return (
     <View

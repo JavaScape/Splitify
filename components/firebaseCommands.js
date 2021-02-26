@@ -42,9 +42,8 @@ const uploadImage = async (image, userId) => {
 const getImage = async (userId) => {
   try {
     const image = await storageRef.child("images/" + userId);
-    var toReturn = null;
-    toReturn = await image.getDownloadURL();
-    return toReturn;
+    console.log(image);
+    return !!image ? await image.getDownloadURL() : null;
   } catch (e) {
     console.log("Error: ", e);
   }
